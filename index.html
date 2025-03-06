@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Character Creator</title>
+    <style>
+        :root {
+            --primary: #4a76a8;
+            --primary-light: #5a86b8;
+            --primary-dark: #3a669a;
+            --secondary: #6c757d;
+            --success: #28a745;
+            --background: #f8f9fa;
+            --card: #ffffff;
+            --text: #343a40;
+            --border: #dee2e6;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--background);
+            color: var(--text);
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+        }
+
+        header {
+            grid-column: 1 / -1;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        h1, h2, h3 {
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+
+        .card {
+            background: var(--card);
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .button-secondary {
+            background-color: var(--secondary);
+        }
+
+        .button-secondary:hover {
+            background-color: #5a6268;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .character-preview {
+            position: sticky;
+            top: 20px;
+        }
+
+        .character-preview h2 {
+            margin-bottom: 10px;
+        }
+
+        .character-detail {
+            margin-bottom: 5px;
+            display: flex;
+        }
+
+        .character-detail strong {
+            min-width: 120px;
+            display: inline-block;
+        }
+
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 20px;
+        }
+
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            opacity: 0.7;
+        }
+
+        .tab.active {
+            border-bottom: 3px solid var(--primary);
+            opacity: 1;
+            font-weight: 500;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .character-list {
+            margin-top: 20px;
+        }
+
+        .character-item {
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 10px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .character-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .character-actions button {
+            padding: 5px 10px;
+            font-size: 14px;
+        }
+
+        /* Button group styles */
+        .button-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+        
+        .option-button {
+            background-color: #e9ecef;
+            color: var(--text);
+            border: 1px solid var(--border);
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+        
+        .option-button:hover {
+            background-color: #dee2e6;
+        }
+        
+        .option-button.selected {
+            background-color: var(--primary);
+            color: white;
+            border-color: var(--primary-dark);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+            
+            .button-group {
+                gap: 5px;
+            }
+            
+            .option-button {
+                padding: 6px 10px;
+                font-size: 13px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Character Creator</h1>
+            <div>
+                <button id="generate-random">Random Character</button>
+                <button id="save-character">Save Character</button>
+                <button id="export-character">Export</button>
+                <button id="import-character">Import</button>
+                <button id="reset-form" class="button-secondary">Reset</button>
+            </div>
+        </header>
+
+        <main>
+            <div class="card">
+                <div class="tabs">
+                    <div class="tab active" data-tab="personal">Personal</div>
+                    <div class="tab" data-tab="physical">Physical</div>
+                    <div class="tab" data-tab="appearance">Appearance</div>
+                    <div class="tab" data-tab="actions">Actions</div>
+                </div>
+                
+                <form id="character-form">
+                    <!-- Personal Tab -->
+                    <div class="tab-content active" id="personal-tab">
+                        <h2>Personal Information</h2>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="name">First Name</label>
+                                <input type="text" id="name" name="name">
+                            </div>
+                            <div class="form-group">
+                                <label for="surname">Last Name</label>
+                                <input type="text" id="surname" name="surname">
+                            </div>
+                        </div>
+                        
+                        <!-- Option buttons will be inserted here -->
+                        <div id="personal-options"></div>
+                    </div>
+                    
+                    <!-- Physical Tab -->
+                    <div class="tab-content" id="physical-tab">
+                        <h2>Physical Attributes</h2>
+                        
+                        <!-- Option buttons will be inserted here -->
+                        <div id="physical-options"></div>
+                    </div>
+                    
+                    <!-- Appearance Tab -->
+                    <div class="tab-content" id="appearance-tab">
+                        <h2>Appearance</h2>
+                        
+                        <!-- Option buttons will be inserted here -->
+                        <div id="appearance-options"></div>
+                        
+                        <div class="form-group">
+                            <label for="markings">Special Markings</label>
+                            <input type="text" id="markings" name="markings" placeholder="Tattoos, scars, etc.">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="clothing">Clothing Style</label>
+                            <input type="text" id="clothing" name="clothing" placeholder="Describe clothing">
+                        </div>
+                    </div>
+                    
+                    <!-- Actions Tab -->
+                    <div class="tab-content" id="actions-tab">
+                        <h2>Actions & Behaviors</h2>
+                        
+                        <!-- Option buttons will be inserted here -->
+                        <div id="action-options"></div>
+                        
+                        <div class="form-group">
+                            <label for="action">Custom Action</label>
+                            <input type="text" id="action" name="action" placeholder="Describe a custom action...">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            
+            <div class="card character-list">
+                <h2>Saved Characters</h2>
+                <div id="saved-characters">
+                    <!-- Saved characters will be listed here -->
+                </div>
+            </div>
+        </main>
+        
+        <aside>
+            <div class="character-preview card">
+                <h2>Character Preview</h2>
+                <div id="character-preview-content">
+                    <p>Fill out the form to see your character preview here.</p>
+                </div>
+            </div>
+        </aside>
+    </div>
+    
+    <!-- Use type="module" to enable ES modules -->
+    <script type="module" src="dist/App.js"></script>
+</body>
+</html>

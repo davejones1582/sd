@@ -1,0 +1,24 @@
+{
+  "name": "character-creator",
+  "version": "1.0.0",
+  "description": "Character Creator with configurable options",
+  "main": "dist/App.js",
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc -w",
+    "serve": "lite-server",
+    "dev": "npm run build && npm run serve"
+  },
+  "keywords": [
+    "character",
+    "creator",
+    "typescript"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "lite-server": "^2.6.1",
+    "typescript": "^5.1.6"
+  },
+  "dependencies": {}
+}
